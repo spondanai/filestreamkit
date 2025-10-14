@@ -33,6 +33,7 @@ jobs:
       - name: Vet
         run: go vet ./...
       - name: Test
+        shell: bash
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
             go test ./... -v -race
