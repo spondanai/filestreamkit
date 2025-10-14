@@ -1,7 +1,7 @@
 # FileStreamKit
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/spondanai/FileStreamKit.svg)](https://pkg.go.dev/github.com/spondanai/FileStreamKit)
-[![CI](https://github.com/spondanai/FileStreamKit/actions/workflows/ci.yml/badge.svg)](https://github.com/spondanai/FileStreamKit/actions/workflows/ci.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/spondanai/filestreamkit.svg)](https://pkg.go.dev/github.com/spondanai/filestreamkit)
+[![CI](https://github.com/spondanai/filestreamkit/actions/workflows/ci.yml/badge.svg)](https://github.com/spondanai/filestreamkit/actions/workflows/ci.yml)
 
 **streamkit** is a Go library for efficient file streaming and packaging, designed for APIs and backend services that need to send files as base64 or zipped archives without excessive memory usage.
 
@@ -30,21 +30,21 @@
 ## Install
 
 ```
-go get github.com/spondanai/FileStreamKit
+go get github.com/spondanai/filestreamkit
 ```
 
 Then import subpackages:
 
 ```
 import (
-    "github.com/spondanai/FileStreamKit/filestream"
-    "github.com/spondanai/FileStreamKit/zipstream"
+    "github.com/spondanai/filestreamkit/filestream"
+    "github.com/spondanai/filestreamkit/zipstream"
 )
 ```
 
 ### Compatibility and Versioning
 
-- Module path: `github.com/spondanai/FileStreamKit`
+- Module path: `github.com/spondanai/filestreamkit`
 - Go versions: tested with Go 1.21+
 - Semantic Versioning: stability is indicated by tags (`v0.x` may change; `v1+` follows semver)
 
@@ -132,7 +132,7 @@ if err := zipstream.StreamZipToBase64Writer(ctx, &buf, entries, opts); err != ni
 
 ## Documentation
 
-Docs: https://pkg.go.dev/github.com/spondanai/FileStreamKit
+Docs: https://pkg.go.dev/github.com/spondanai/filestreamkit
 
 ## License
 
