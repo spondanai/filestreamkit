@@ -45,6 +45,16 @@ func validateEntries(entries []Entry) error {
 		if e.Name == "" {
 			return errors.New("entry name empty")
 		}
+		// Prevent zip-slip and unsafe names: no absolute paths, no drive letters, no traversal
+		// Normalize to forward slashes for checks
+		n := strings.ReplaceAll(e.Name, "\\", "/")
+		if strings.HasPrefix(n, "/") || strings.Contains(n, "../") {
+			return fmt.Errorf("unsafe entry name: %s", e.Name)
+		}
+		// On Windows or other systems, disallow drive letters or colon usage in names
+		if strings.Contains(e.Name, ":") || filepath.IsAbs(e.Name) {
+			return fmt.Errorf("unsafe absolute entry name: %s", e.Name)
+		}
 		if _, dup := seen[e.Name]; dup {
 			return fmt.Errorf("duplicate entry name: %s", e.Name)
 		}
@@ -75,6 +85,30 @@ func SafeJoin(baseDir, relPath string) (string, error) {
 		return "", fmt.Errorf("path escapes base dir: %s", relPath)
 	}
 	return absCombined, nil
+}
+
+// copyWithContext copies from src to dst using a fixed-size buffer while checking
+// the provided context for cancellation between reads and writes.
+func copyWithContext(ctx context.Context, dst io.Writer, src io.Reader) error {
+	buf := make([]byte, 256<<10) // 256KB buffer
+	for {
+		if err := ctx.Err(); err != nil {
+			return err
+		}
+		n, rerr := src.Read(buf)
+		if n > 0 {
+			if _, werr := dst.Write(buf[:n]); werr != nil {
+				return werr
+			}
+		}
+		if rerr == io.EOF {
+			break
+		}
+		if rerr != nil {
+			return rerr
+		}
+	}
+	return nil
 }
 
 func StreamZipToBase64(entries []Entry, opts *Options) (string, error) {
@@ -154,7 +188,7 @@ func StreamZipToBase64Writer(ctx context.Context, w io.Writer, entries []Entry, 
 				err = fmt.Errorf("create zip entry failed (%s): %w", e.Name, herr)
 				return
 			}
-			if _, cerr := io.Copy(ew, f); cerr != nil {
+			if cerr := copyWithContext(ctx, ew, f); cerr != nil {
 				err = fmt.Errorf("write zip entry failed (%s): %w", e.Name, cerr)
 				return
 			}

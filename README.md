@@ -83,10 +83,39 @@ if err := zipstream.StreamZipToBase64Writer(context.Background(), buf, entries, 
 
 ## Security and performance notes
 
-- Large files: prefer Writer APIs to avoid building giant strings in RAM.
-- Concurrency: for many files, stream sequentially; see roadmap for batch concurrency.
-- Path safety: validate/whitelist paths, or provide a base directory and join to prevent traversal.
-- Pre-compressed files (e.g., .jpg, .mp4) are stored without recompression to save CPU.
+- Large files: prefer Writer APIs to avoid building giant strings in RAM (use `StreamFileToBase64Writer` and `StreamZipToBase64Writer`). Combine with `context.Context` for timeouts/cancellation.
+- Concurrency: for many files, stream sequentially; consider batching at the app layer if needed.
+- Path safety: always use `SafeJoin()` or set `Options.BaseDir` to prevent directory traversal when paths come from users.
+- Zip entry safety: zip entry names must be safe relative paths (no absolute paths, no `..` traversal, no drive letters/colons). The library validates and will error on unsafe entry names to prevent zip-slip.
+- Pre-compressed files (e.g., .jpg, .mp4) are stored without recompression to save CPU; tune `CompressionLevel` for your workload.
+- Application limits: enforce limits at the application layer (max number of files, per-file size, and total archive size) to prevent resource exhaustion and DoS.
+- Error hygiene: avoid leaking internal paths in API errors; log detailed errors internally, return generic messages to clients.
+
+Example (safe usage):
+
+```go
+// Restrict all file access to a safe base directory
+opts := &zipstream.Options{
+    BaseDir:     "/var/safe/uploads",
+    SkipMissing: true,
+    // Optional: filter to whitelist certain extensions
+    Filter: func(e zipstream.Entry) bool {
+        ext := strings.ToLower(filepath.Ext(e.Name))
+        switch ext { case ".txt", ".pdf", ".png", ".jpg":
+            return true
+        }
+        return false
+    },
+}
+
+ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+defer cancel()
+
+var buf bytes.Buffer
+if err := zipstream.StreamZipToBase64Writer(ctx, &buf, entries, opts); err != nil {
+    // Handle error safely without exposing internal paths
+}
+```
 
 ## Documentation
 
