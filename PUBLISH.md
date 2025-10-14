@@ -36,3 +36,14 @@ Optional:
 
 - Protect branches, enable Actions, and watch CI passing on PRs.
 - Add release notes when creating tags.
+
+Public visibility:
+
+- Ensure the repository is set to Public in GitHub repo settings
+- Push a tag `v0.1.0` or later so pkg.go.dev indexes docs
+- Add badges to README (build status, pkg.go.dev):
+
+```
+[![Go Reference](https://pkg.go.dev/badge/github.com/spondanai/FileStreamKit.svg)](https://pkg.go.dev/github.com/spondanai/FileStreamKit)
+[![Go CI](https://github.com/spondanai/FileStreamKit/actions/workflows/ci.yml/badge.svg)](https://github.com/spondanai/FileStreamKit/actions/workflows/ci.yml)
+```

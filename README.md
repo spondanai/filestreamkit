@@ -1,5 +1,8 @@
 # FileStreamKit
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/spondanai/FileStreamKit.svg)](https://pkg.go.dev/github.com/spondanai/FileStreamKit)
+[![CI](https://github.com/spondanai/FileStreamKit/actions/workflows/ci.yml/badge.svg)](https://github.com/spondanai/FileStreamKit/actions/workflows/ci.yml)
+
 **streamkit** is a Go library for efficient file streaming and packaging, designed for APIs and backend services that need to send files as base64 or zipped archives without excessive memory usage.
 
 ## Features
@@ -38,6 +41,16 @@ import (
     "github.com/spondanai/FileStreamKit/zipstream"
 )
 ```
+
+### Compatibility and Versioning
+
+- Module path: `github.com/spondanai/FileStreamKit`
+- Go versions: tested with Go 1.21+
+- Semantic Versioning: stability is indicated by tags (`v0.x` may change; `v1+` follows semver)
+
+### CI and Releases
+
+This repository includes GitHub Actions for CI (build/test) on push/PR and automatic Release notes when pushing tags like `v0.1.0`.
 
 ## Quick Start
 
