@@ -1,0 +1,18 @@
+# Binaries and build artifacts
+bin/
+build/
+dist/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Coverage and test outputs
+coverage.*
+*.out
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
