@@ -10,9 +10,28 @@ dist/
 # Coverage and test outputs
 coverage.*
 *.out
+*.cover
+coverage/
+profile.cov
 
 # OS/editor files
 .DS_Store
 Thumbs.db
 .idea/
 .vscode/
+!.vscode/tasks.json
+
+# Go build cache (local) & generated files
+*.test
+*.tmp
+*.log
+debug/
+
+# Dependency/vendor (we don't vendor in this repo)
+vendor/
+
+# Archives
+*.tar
+*.gz
+*.zip
+*.7z
