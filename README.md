@@ -46,7 +46,7 @@ import (
 
 - Module path: `github.com/spondanai/filestreamkit`
 - Go versions: tested with Go 1.21+
-- Semantic Versioning: stability is indicated by tags (`v0.x` may change; `v1+` follows semver)
+- Semantic Versioning: v1+ follows SemVer. The public API is stable starting from `v1.0.0`.
 
 ### CI and Releases
 
